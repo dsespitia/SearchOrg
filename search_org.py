@@ -104,9 +104,9 @@ def search_org(api_shodan, ips):
 
             """Mostrar los resultados por facetas"""
             for facet in result['facets']:
-                print('\t[!] ' + FACET_TITLES[facet])
+                print('\t[*] ' + FACET_TITLES[facet])
                 for term in result['facets'][facet]:
-                    print('\t\t%s: %s' % (term['value'], term['count']))
+                    print('\t\t[!] %s: %s' % (term['value'], term['count']))
                 print("")
 
         except Exception as e:
