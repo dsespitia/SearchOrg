@@ -3,6 +3,8 @@ Colocando el dominio de correo electr√≥nico de una empresa se obtiene informaci√
 
 # Tener en cuenta
 
+En la maquina debe estar instalado NMAP para que pueda usar el comando
+
 Se debe tener una cuenta con Shodan y cargar el APIKey donde lo indica el script
 
 Configurar las librerias que se requieren y estan en el requirements.txt
