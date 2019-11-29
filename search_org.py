@@ -52,7 +52,7 @@ def dnsdata(dominio):
 def infonmap(ips):
     print('\n\n')
     print("--------------------------------------------------------------")
-    print("\t\t\tInformación de las IPS        ")
+    print("\t\t\tInformación de las IPS\n")
 
     for ip in set(ips):
         nm=nmap.PortScanner()
