@@ -1,0 +1,4 @@
+python-nmap
+dns.resolver
+shodan
+argparse
