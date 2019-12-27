@@ -2,7 +2,7 @@
 
 """ Modulos que se necesitan"""
 import shodan
-import dnspython
+import dns.resolver
 import argparse
 import nmap
 
