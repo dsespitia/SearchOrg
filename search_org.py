@@ -5,7 +5,7 @@ import shodan
 import dns.resolver
 import argparse
 import nmap
-import codecs
+
 
 
 """ Argumentos solicitados"""
@@ -40,7 +40,7 @@ def dnsdata(dominio):
 
     """ Extraer IPs """
 
-    names = ["", "www.", "mail.", "mail2.", "correo.", "webmail.", "vpn."]
+    names = ["", "sinergy.", "www.", "mail.", "mail2.", "correo.", "webmail.", "vpn.", "sip.", "smtp.", "pop.", "pop3.", "imap."]
     for server in names:
         try:
             for ip in dns.resolver.query(server + dominio, 'A'):
@@ -52,11 +52,11 @@ def dnsdata(dominio):
 def infonmap(ips):
     print('\n\n')
     print("--------------------------------------------------------------")
-    print("\t\t\tInformación de las IPS\n")
+    print("\t\t\tInformación de las IPS \n")
 
     for ip in set(ips):
-        nm=nmap.PortScanner()
-        nm.scan(hosts=ip,arguments='-sV -T4 -Pn -p 21,22,25,80,443,445,993,3389,8080')
+        nm = nmap.PortScanner()
+        nm.scan(hosts=ip,arguments='-sV -T4 -Pn -p 21,22,25,80,443,445,993,3389,8080,8443')
         for port in nm[ip]['tcp'].keys():
             if nm[ip]['tcp'][port]['state'] == 'open':
                 print('\t[*] Detectado un servicio en la IP ' + ip + ' en puerto ' + str(port))
@@ -65,7 +65,7 @@ def infonmap(ips):
                 print('\t\t[!] Version : ' + nm[ip]['tcp'][port]['version'])
 
 
-def search_org(api_shodan, ips):
+def search_org(api_shodan, ips, args):
     """Lista de atributos que se resumiran por org"""
     FACETS = [
         ('port', 10),
@@ -82,40 +82,49 @@ def search_org(api_shodan, ips):
         'domain': 'Top 10 dominios',
         'ssl.version': 'Top 10 versiones SSL',
     }
-    orgs = []
     api = shodan.Shodan(api_shodan)
     for ip in ips:
         try:
             info = api.host(ip)
-            orgs.append(str(info['org']))
-        except Exception as e:
-            print('\n')
+            if len(info['vulns']) >= 1:
+                print("\n\n")
+                print(
+                "--------------------------------------------------------------")
+                print(
+                    '\t[*] Detectadas vulnerabilidad en la IP ' + ip )
+                for vuln in info['vulns']:
+                    print('\t\t[!] Vulnerabilidad : ' + vuln)
 
-    for org in set(orgs):
-        try:
-            query = 'org:"' + org + '"'
-            """Uso de metodo count para hace la busqueda sin necesidad del API pago"""
-            result = api.count(query, facets=FACETS)
-            print("\n\n")
-            print("--------------------------------------------------------------")
-            print("\t\t\tRegistos de la organizacion   \n")
-            print('\t[!] Busqueda: %s' % query)
-            print('\t[!] Total detecciones: %s\n' % result['total'])
+        except Exception:
+            continue
 
-            """Mostrar los resultados por facetas"""
+    try:
+
+        args = args.split('.')[0]
+        query = 'org:"' + args + '"'
+        result = api.count(query, facets=FACETS)
+        print("\n\n")
+        print("--------------------------------------------------------------")
+        print("\t\t\tRegistos de la organizacion   \n")
+        print('\t[!] Busqueda: %s' % query)
+        print('\t[!] Total detecciones: %s\n' % result['total'])
+
+        """Mostrar los resultados por facetas"""
+        if result['total'] == 0:
+            print('\t[*] El dominio no se detecta en ninguna organización')
+        else:
             for facet in result['facets']:
                 print('\t[*] ' + FACET_TITLES[facet])
                 for term in result['facets'][facet]:
                     print('\t\t[!] %s: %s' % (term['value'], term['count']))
-                print("")
 
-        except Exception as e:
-            print('Error: %s' % e)
+    except Exception as e:
+        print('Error: %s' % e)
 
 
 def main():
     """ Se configura la llave de la API de Shodan"""
-    api_shodan = "COLOQUE ACA SU API KEY DE SHODAN"
+    api_shodan = "FLI4oMfAVAb6IyYbtO4e9lvj7DlI5BM5"
     args = argumentos()
     if args.dominio == None:
         print(parser.print_usage)
@@ -123,7 +132,7 @@ def main():
     else:
         ips = dnsdata(args.dominio)
         infonmap(ips)
-        search_org(api_shodan, ips)
+        search_org(api_shodan, ips, args.dominio)
 
 
 if __name__ == '__main__':
