@@ -57,7 +57,7 @@ def infonmap(ips):
 
     for ip in set(ips):
         nm = nmap.PortScanner()
-        nm.scan(hosts=ip,arguments='-sV -T4 -Pn -p 21,22,25,80,443,445,993,3389,8080,8443')
+        nm.scan(hosts=ip,arguments='-sV -T4 -Pn -p 21,22,23,25,80,81,82,123,443,445,993,1433,2222,3389,4443,8080,8443,27017')
         for port in nm[ip]['tcp'].keys():
             if nm[ip]['tcp'][port]['state'] == 'open':
                 print('\t[*] Detectado un servicio en la IP ' + ip + ' en puerto ' + str(port))
