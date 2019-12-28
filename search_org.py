@@ -5,6 +5,7 @@ import shodan
 import dns.resolver
 import argparse
 import nmap
+import io
 
 
 
@@ -40,7 +41,7 @@ def dnsdata(dominio):
 
     """ Extraer IPs """
 
-    names = ["", "sinergy.", "www.", "mail.", "mail2.", "correo.", "webmail.", "vpn.", "sip.", "smtp.", "pop.", "pop3.", "imap."]
+    names = io.open("subdomains.txt", "r")
     for server in names:
         try:
             for ip in dns.resolver.query(server + dominio, 'A'):
