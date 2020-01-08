@@ -42,13 +42,15 @@ def dnsdata(dominio):
     """ Extraer IPs """
 
     names = io.open("subdomains.txt", "r")
+    #names=["", "www.", "mail.", "mail2", "correo", "webmail", "vpn", "hv"]
     for server in names:
+        server = server.strip('\n\r')
         try:
-            for ip in dns.resolver.query(server + dominio, 'A'):
+            for ip in dns.resolver.query(server + "." + dominio, 'A'):
                 ips.append(str(ip))
         except:
             pass
-    return (ips)
+    return ips
 
 def infonmap(ips):
     print('\n\n')
@@ -125,7 +127,7 @@ def search_org(api_shodan, ips, args):
 
 def main():
     """ Se configura la llave de la API de Shodan"""
-    api_shodan = ""
+    api_shodan = "FLI4oMfAVAb6IyYbtO4e9lvj7DlI5BM5"
     args = argumentos()
     if args.dominio == None:
         print(parser.print_usage)
