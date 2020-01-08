@@ -111,6 +111,8 @@ mailadmin
 ssh
 citrix
 voip
+hv
+rrhh
 connect
 game
 lib
