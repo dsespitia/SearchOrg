@@ -127,7 +127,7 @@ def search_org(api_shodan, ips, args):
 
 def main():
     """ Se configura la llave de la API de Shodan"""
-    api_shodan = "FLI4oMfAVAb6IyYbtO4e9lvj7DlI5BM5"
+    api_shodan = ""
     args = argumentos()
     if args.dominio == None:
         print(parser.print_usage)
