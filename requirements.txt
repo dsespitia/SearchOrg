@@ -1,4 +1,4 @@
 python-nmap
-dnspython
+dnspython3
 shodan
 argparse
