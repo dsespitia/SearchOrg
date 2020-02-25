@@ -139,6 +139,7 @@ def search_org(api_shodan, ips, args):
         else:
             for facet in result['facets']:
                 print('\t[*] ' + FACET_TITLES[facet])
+                file('\t[*] ' + FACET_TITLES[facet])
                 for term in result['facets'][facet]:
                     print('\t\t[!] %s: %s' % (term['value'], term['count']))
                     file('\t\t[!] %s: %s' % (term['value'], term['count']))
